@@ -8,18 +8,37 @@
 </head>
 <body>
     <div class="game-wrapper">
+        <img src="img/cw_logo-horizontal.png" alt="charity: water logo" class="charity-logo-full">
         <h1 class="game-title">Water Drop</h1>
         <p class="game-tagline">Catch the good drops, avoid the bad ones!</p>
         <div class="score-panel">
             <div class="score">Score: <span id="score">0</span></div>
             <div class="timer">Time: <span id="time">30</span>s</div>
-            <button id="start-btn">Start Game</button>
+            <div class="button-group">
+                <button id="start-btn">Start Game</button>
+                <button id="reset-btn">Reset</button>
+            </div>
         </div>
-        
-        <div id="game-container">
+
+        <div id="game-container"></div>
+
+        <div id="game-over-popup" class="popup hidden">
+            <div class="popup-content">
+                <div class="confetti-icon" aria-hidden="true">
+                    <span class="confetti-piece piece-1"></span>
+                    <span class="confetti-piece piece-2"></span>
+                    <span class="confetti-piece piece-3"></span>
+                    <span class="confetti-piece piece-4"></span>
+                    <span class="confetti-piece piece-5"></span>
+                    <span class="confetti-piece piece-6"></span>
+                </div>
+                <h2>Game Over!</h2>
+                <p id="popup-message">Time's up!</p>
+                <button id="restart-btn">Play Again</button>
+            </div>
         </div>
     </div>
-    
+
     <script src="script.js"></script>
 </body>
 </html>
