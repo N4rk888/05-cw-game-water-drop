@@ -11,16 +11,22 @@
         <img src="img/cw_logo-horizontal.png" alt="charity: water logo" class="charity-logo-full">
         <h1 class="game-title">Water Drop</h1>
         <p class="game-tagline">Catch the good drops, avoid the bad ones!</p>
-        <div class="score-panel">
-            <div class="score">Score: <span id="score">0</span></div>
-            <div class="timer">Time: <span id="time">30</span>s</div>
-            <div class="button-group">
-                <button id="start-btn">Start Game</button>
-                <button id="reset-btn">Reset</button>
+        <div class="score-panel-row">
+            <div class="score-panel active-panel">
+                <div class="score">Score: <span id="score">0</span></div>
+                <div class="timer">Time: <span id="time">30</span>s</div>
+                <div class="button-group">
+                    <button id="start-btn">Start Game</button>
+                    <button id="reset-btn">Reset</button>
+                    <button id="difficulty-btn">Difficulty</button>
+                    <button id="help-btn">Help</button>
+                </div>
             </div>
         </div>
 
-        <div id="game-container"></div>
+        <div id="game-container">
+            <p id="milestone-message" class="game-title milestone-message" aria-live="polite"></p>
+        </div>
 
         <div id="game-over-popup" class="popup hidden">
             <div class="popup-content">
@@ -34,9 +40,49 @@
                 </div>
                 <h2>Game Over!</h2>
                 <p id="popup-message">Time's up!</p>
-                <button id="restart-btn">Play Again</button>
+                <div class="popup-actions">
+                    <button id="restart-btn">Play Again</button>
+                    <button id="popup-reset-btn">Reset</button>
+                </div>
+                <a href="https://www.charitywater.org/" target="_blank" rel="noopener noreferrer" class="popup-charity-link">
+                    Visit charity: water
+                </a>
             </div>
         </div>
+
+        <div id="help-popup" class="popup hidden">
+            <div class="popup-content info-popup">
+                <h2>Help</h2>
+                <p>Highest score in 30 seconds.</p>
+                <img src="img/helpMenu_Water-Drop-Game.png" alt="Help menu instructions" class="help-menu-image">
+                <button class="close-popup-btn" data-popup="help-popup">Close</button>
+                <a href="https://www.charitywater.org/" target="_blank" rel="noopener noreferrer" class="popup-charity-link">
+                    Visit charity: water
+                </a>
+            </div>
+        </div>
+
+        <div id="difficulty-popup" class="popup hidden">
+            <div class="popup-content info-popup">
+                <h2>Difficulty</h2>
+                <div class="difficulty-options">
+                    <button id="easy-btn" class="difficulty-option-btn active" type="button">Easy</button>
+                    <button id="medium-btn" class="difficulty-option-btn" type="button">Medium</button>
+                    <button id="hard-btn" class="difficulty-option-btn" type="button">Hard</button>
+                </div>
+                <p id="difficulty-status">Current: Easy</p>
+                <button class="close-popup-btn" data-popup="difficulty-popup">Close</button>
+                <a href="https://www.charitywater.org/" target="_blank" rel="noopener noreferrer" class="popup-charity-link">
+                    Visit charity: water
+                </a>
+            </div>
+        </div>
+
+        <footer class="site-footer">
+            <a href="https://www.charitywater.org/" target="_blank" rel="noopener noreferrer" class="site-footer-link">
+                Visit charity: water
+            </a>
+        </footer>
     </div>
 
     <script src="script.js"></script>

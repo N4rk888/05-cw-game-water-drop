@@ -40,8 +40,16 @@ body {
     align-items: center;
     gap: 16px;
     position: relative;
-    width: min(100%, 860px);
+    width: min(100%, calc(100vw - 32px));
     padding: 8px 0;
+    transform: translateY(-14px);
+}
+
+.score-panel-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
 .score-panel {
@@ -51,10 +59,15 @@ body {
     gap: 12px;
     flex-wrap: wrap;
     width: min(100%, 800px);
+    min-height: 58px;
     padding: 10px 12px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.active-panel {
+    max-width: 100%;
 }
 
 .timer {
@@ -73,24 +86,50 @@ body {
     border-radius: 8px;
     position: relative;
     overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#game-container * {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
 }
 
 #start-btn,
 #restart-btn,
-#reset-btn {
-    padding: 8px 16px;
-    background-color: white;
-    color: #333;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+#reset-btn,
+#help-btn,
+#difficulty-btn,
+#popup-reset-btn,
+.close-popup-btn,
+.button-group button,
+.popup-actions button {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 10px 18px;
+    min-height: 42px;
+    min-width: 110px;
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #000;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
 }
 
 #start-btn:hover,
 #restart-btn:hover,
-#reset-btn:hover {
-    background-color: #f2f2f2;
+#reset-btn:hover,
+#help-btn:hover,
+#difficulty-btn:hover,
+#popup-reset-btn:hover,
+.close-popup-btn:hover,
+.button-group button:hover,
+.popup-actions button:hover {
+    background-color: #222;
 }
 
 .button-group {
@@ -108,16 +147,19 @@ body {
 
 .water-drop {
     position: absolute;
-    width: var(--drop-size, 60px);
-    height: var(--drop-size, 60px);
+    width: var(--drop-size, 50px);
+    height: calc(var(--drop-size, 50px) * 1.2);
     background-color: #77A8BB;
-    border-radius: 50%;
+    border-radius: 50% 50% 60% 60% / 70% 70% 30% 30%;
+    clip-path: polygon(50% 0%, 85% 55%, 75% 85%, 50% 100%, 25% 85%, 15% 55%);
     animation: dropFall linear forwards;
     transform-origin: center;
     cursor: pointer;
     padding: 15px;
     margin: -15px;
     transition: transform 0.1s ease;
+    box-shadow: inset 0 -3px 4px rgba(255,255,255,0.25);
+    touch-action: none;
 }
 
 .water-drop:hover {
@@ -126,6 +168,32 @@ body {
 
 .bad-drop {
     background-color: #BF6C46;
+    box-shadow: inset 0 -3px 4px rgba(255,255,255,0.22);
+}
+
+.umbrella-drop {
+    position: absolute;
+    height: auto;
+    pointer-events: auto;
+    cursor: pointer;
+    transform-origin: center;
+    animation-name: umbrellaSpin;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-fill-mode: none;
+    will-change: transform;
+    touch-action: none;
+}
+
+.add-time-clock {
+    position: absolute;
+    height: auto;
+    cursor: pointer;
+    animation: dropFall linear forwards;
+    transform-origin: center;
+    padding: 10px;
+    margin: -10px;
+    touch-action: none;
 }
 
 .charity-logo-full {
@@ -150,6 +218,80 @@ body {
     text-align: center;
 }
 
+.milestone-message {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    width: min(92%, 680px);
+    font-size: clamp(1.05rem, 2.8vw, 1.5rem);
+    color: #000;
+    opacity: 0;
+    min-height: 1.2em;
+    text-wrap: balance;
+    text-align: center;
+    pointer-events: none;
+}
+
+.milestone-message.show {
+    animation: milestonePopFlashFade 2s linear forwards;
+}
+
+@keyframes milestonePopFlashFade {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-4px) scale(0.96);
+        color: #000;
+    }
+
+    8% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scale(1);
+        color: #FFC907;
+    }
+
+    16% { color: #000; }
+    24% { color: #FFC907; }
+    32% { color: #000; }
+    40% { color: #FFC907; }
+    48% { color: #000; }
+    56% { color: #FFC907; }
+    64% { color: #000; }
+    72% { color: #FFC907; }
+    80% { color: #000; }
+    88% {
+        color: #FFC907;
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-6px) scale(1.02);
+        color: #000;
+    }
+}
+
+.site-footer {
+    width: min(100%, 800px);
+    display: flex;
+    justify-content: center;
+    margin-top: 4px;
+    padding: 8px 0;
+}
+
+.site-footer-link {
+    color: #131313;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.site-footer-link:hover {
+    color: #2E9DF7;
+}
+
 .popup {
     position: absolute;
     inset: 0;
@@ -170,6 +312,9 @@ body {
     padding: 44px 32px 24px;
     border-radius: 12px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     position: relative;
     width: min(90vw, 360px);
@@ -185,6 +330,85 @@ body {
     margin-bottom: 16px;
     font-size: 18px;
     color: #333;
+}
+
+.info-popup {
+    background: #fff;
+}
+
+.help-menu-image {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin: 0 auto 14px;
+    border-radius: 8px;
+}
+
+.popup-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.popup-actions button {
+    min-width: 120px;
+}
+
+.popup-charity-link {
+    display: block;
+    margin-top: 12px;
+    width: 100%;
+    text-align: center;
+    color: #131313;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.popup-charity-link:hover {
+    color: #2E9DF7;
+}
+
+.difficulty-options {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.difficulty-option-btn {
+    min-width: 96px;
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #000;
+}
+
+.difficulty-option-btn.active {
+    background-color: #222;
+    border-color: #222;
+}
+
+.umbrella-protection-timer {
+    position: fixed;
+    z-index: 50;
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 2px solid #2E9DF7;
+    background-color: #fff;
+    color: #131313;
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.umbrella-protection-timer.hidden {
+    display: none;
 }
 
 .confetti-icon {
@@ -260,10 +484,24 @@ body {
     }
 }
 
+@keyframes umbrellaSpin {
+    from {
+        rotate: 0deg;
+    }
+    to {
+        rotate: 360deg;
+    }
+}
+
 @media (max-width: 700px) {
-    .score-panel {
+    .score-panel-row {
         flex-direction: column;
-        align-items: center;
+    }
+
+    .score-panel,
+    .active-panel {
+        width: 100%;
+        max-width: 100%;
     }
 
     .score,
