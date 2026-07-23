@@ -9,8 +9,8 @@ let score = 0;
 let timeRemaining = 30;
 let confettiInterval;
 let currentDifficulty = "easy";
-const umbrellaProtectionDurationMs = 6000;
-const addTimeClockSpawnIntervalMs = 1200;
+const defaultUmbrellaProtectionDurationMs = 6000;
+const defaultAddTimeClockSpawnIntervalMs = 1200;
 let umbrellaProtectionUntil = 0;
 let umbrellaProtectionTimerId;
 let cursorX = 0;
@@ -167,6 +167,28 @@ function getDifficultySettings() {
   }
 }
 
+function getClockSpawnInterval() {
+  switch (currentDifficulty) {
+    case "medium":
+      return 2000;
+    case "hard":
+      return 3000;
+    default:
+      return defaultAddTimeClockSpawnIntervalMs;
+  }
+}
+
+function getUmbrellaSettings() {
+  switch (currentDifficulty) {
+    case "medium":
+      return { protectionDurationMs: 5000, spawnCount: 2, spawnDelaysMs: [15000] };
+    case "hard":
+      return { protectionDurationMs: 4000, spawnCount: 1, spawnDelaysMs: [] };
+    default:
+      return { protectionDurationMs: defaultUmbrellaProtectionDurationMs, spawnCount: 3, spawnDelaysMs: [10000, 20000] };
+  }
+}
+
 function updateDifficultyButtons() {
   difficultyOptionButtons.forEach((button) => {
     const isActive = button.id === `${currentDifficulty}-btn`;
@@ -225,7 +247,7 @@ function startGame() {
   dropMaker = setInterval(createDrop, difficultySettings.goodDropInterval);
   contaminatedDropMaker = setInterval(createContaminatedDrop, difficultySettings.spawnInterval);
   createAddTimeClock();
-  addTimeClockMaker = setInterval(createAddTimeClock, addTimeClockSpawnIntervalMs);
+  addTimeClockMaker = setInterval(createAddTimeClock, getClockSpawnInterval());
   scheduleUmbrellaSpawns();
   timerInterval = setInterval(updateTimer, 1000);
 }
@@ -405,22 +427,27 @@ function clearUmbrellaSpawnTimers() {
 function scheduleUmbrellaSpawns() {
   clearUmbrellaSpawnTimers();
 
-  // Spawn one umbrella immediately, then at most two more during the 30s round.
-  createUmbrellaDrop();
-  const additionalSpawnDelays = [10000, 20000];
+  const umbrellaSettings = getUmbrellaSettings();
+  const totalSpawns = umbrellaSettings.spawnCount;
 
-  additionalSpawnDelays.forEach((delay) => {
+  if (totalSpawns <= 0) return;
+
+  createUmbrellaDrop();
+
+  for (let spawnIndex = 1; spawnIndex < totalSpawns; spawnIndex += 1) {
+    const delay = umbrellaSettings.spawnDelaysMs[spawnIndex - 1] ?? 0;
     const timerId = setTimeout(() => {
       if (gameRunning) {
         createUmbrellaDrop();
       }
     }, delay);
     umbrellaSpawnTimers.push(timerId);
-  });
+  }
 }
 
 function activateUmbrellaProtection() {
-  umbrellaProtectionUntil = Date.now() + umbrellaProtectionDurationMs;
+  const umbrellaSettings = getUmbrellaSettings();
+  umbrellaProtectionUntil = Date.now() + umbrellaSettings.protectionDurationMs;
   startUmbrellaProtectionCountdown();
 }
 
